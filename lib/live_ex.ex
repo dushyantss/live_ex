@@ -14,7 +14,7 @@ defmodule LiveEx do
     quote do
       require Logger
 
-      import Phoenix.LiveView, only: [assign: 3, assign_new: 3]
+      import Phoenix.Component, only: [assign: 3, assign_new: 3]
 
       @doc """
       Configures the socket with an initial setup.
@@ -31,6 +31,7 @@ defmodule LiveEx do
             assign_new(socket, key, fn -> val end)
           end)
 
+        :ok = Phoenix.PubSub.unsubscribe(unquote(pubsub_name), socket.assigns.live_ex_store_topic)
         :ok = Phoenix.PubSub.subscribe(unquote(pubsub_name), socket.assigns.live_ex_store_topic)
 
         socket
